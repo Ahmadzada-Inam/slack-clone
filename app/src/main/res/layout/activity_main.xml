@@ -18,21 +18,21 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent" >
 
-            <include
-                android:id="@+id/nav_drawer_header_include"
-                layout="@layout/nav_header_main" />
+            <include layout="@layout/nav_header_main"
+                android:id="@+id/nav_drawer_header_include" />
 
             <ListView
-                android:id="@+id/channels_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/nav_drawer_header_include">
+                android:layout_below="@id/nav_drawer_header_include"
+                android:id="@+id/channels_list">
 
             </ListView>
 

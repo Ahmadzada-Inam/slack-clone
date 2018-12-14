@@ -1,5 +1,6 @@
 package com.example.ahmadzada.slackclone
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
@@ -39,7 +40,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginBtnNavHeaderClick(v: View) {
-
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
     }
 
     fun addChannelBtnClick(v: View) {

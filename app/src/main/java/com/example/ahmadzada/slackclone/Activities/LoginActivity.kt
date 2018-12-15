@@ -1,9 +1,10 @@
-package com.example.ahmadzada.slackclone
+package com.example.ahmadzada.slackclone.Activities
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.example.ahmadzada.slackclone.R
 
 class LoginActivity : AppCompatActivity() {
 

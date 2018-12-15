@@ -1,9 +1,11 @@
-package com.example.ahmadzada.slackclone
+package com.example.ahmadzada.slackclone.Activities
 
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.example.ahmadzada.slackclone.R
+import com.example.ahmadzada.slackclone.Services.AuthService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -45,6 +47,8 @@ class CreateUserActivity : AppCompatActivity() {
     }
 
     fun createCreateUserBtnClick(v: View) {
+        AuthService.registerUser(this, "i@gmail.com", "123456") {
 
+        }
     }
 }

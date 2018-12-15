@@ -1,7 +1,6 @@
 package com.example.ahmadzada.slackclone
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle

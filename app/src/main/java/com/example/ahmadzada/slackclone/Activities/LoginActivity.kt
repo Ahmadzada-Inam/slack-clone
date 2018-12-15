@@ -20,5 +20,6 @@ class LoginActivity : AppCompatActivity() {
     fun loginSignupBtnClick(v: View) {
         val createUserIntent = Intent(this, CreateUserActivity::class.java)
         startActivity(createUserIntent)
+        finish()
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.example.ahmadzada.slackclone.R
 import com.example.ahmadzada.slackclone.Services.AuthService
+import com.example.ahmadzada.slackclone.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -47,6 +48,7 @@ class CreateUserActivity : AppCompatActivity() {
     }
 
     fun createCreateUserBtnClick(v: View) {
+        var userName = this.createUserNameTextField.text.toString()
         val userEmail = this.createEmailField.text.toString()
         val password = this.createPasswordTextField.text.toString()
 
@@ -54,8 +56,11 @@ class CreateUserActivity : AppCompatActivity() {
             if (registerSuccess) {
                 AuthService.loginUser(this, userEmail, password) { loginSuccess ->
                     if (loginSuccess) {
-                        println(AuthService.userEmail)
-                        println(AuthService.authToken)
+                        AuthService.createUser(this, userName, userEmail, this.userAvatar, this.avatarColor) { createSuccess ->
+                            if (createSuccess) {
+                                finish()
+                            }
+                        }
                     }
                 }
             }

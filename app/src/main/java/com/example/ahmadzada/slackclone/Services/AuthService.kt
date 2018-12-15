@@ -7,6 +7,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.ahmadzada.slackclone.Utilities.CREATE_URL
+import com.example.ahmadzada.slackclone.Utilities.FIND_USER_URL
 import com.example.ahmadzada.slackclone.Utilities.LOGIN_URL
 import com.example.ahmadzada.slackclone.Utilities.REGISTER_URL
 import org.json.JSONException
@@ -19,7 +20,6 @@ object AuthService {
     var isLoggedIn = false
 
     fun registerUser(context: Context, email: String, password: String, complete: (Boolean) -> Unit) {
-
         val json = JSONObject()
         json.put("email", email)
         json.put("password", password)
@@ -43,7 +43,6 @@ object AuthService {
     }
 
     fun loginUser(context: Context, email: String, password: String, complete: (Boolean) -> Unit) {
-
         val json = JSONObject()
         json.put("email", email)
         json.put("password", password)
@@ -77,7 +76,6 @@ object AuthService {
     }
 
     fun createUser(context: Context, name: String, email: String, avatarName: String, avatarColor: String, complete: (Boolean) -> Unit) {
-
         val json = JSONObject()
         json.put("name", name)
         json.put("email", email)
@@ -118,5 +116,37 @@ object AuthService {
         }
 
         Volley.newRequestQueue(context).add(createRequest)
+    }
+
+    fun findUserByEmail(context: Context, complete: (Boolean) -> Unit) {
+        val findUserRequest = object : JsonObjectRequest(Method.GET, "$FIND_USER_URL$userEmail", null, Response.Listener { response ->
+            try {
+                UserDataService.name = response.getString("name")
+                UserDataService.email = response.getString("email")
+                UserDataService.avatarName = response.getString("avatarName")
+                UserDataService.avatarColor = response.getString("avatarColor")
+                UserDataService.id = response.getString("_id")
+
+                complete(true)
+            } catch (e: JSONException) {
+                Log.d("JSON", "EXC: " + e.toString())
+
+                complete(false)
+            }
+        }, Response.ErrorListener {
+            complete(false)
+        }) {
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val map = HashMap<String, String>()
+                map.put("Authorization", "Bearer ${this@AuthService.authToken}")
+                return map
+            }
+        }
+
+        Volley.newRequestQueue(context).add(findUserRequest)
     }
 }

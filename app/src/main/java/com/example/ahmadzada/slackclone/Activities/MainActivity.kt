@@ -70,7 +70,8 @@ class MainActivity : AppCompatActivity() {
     fun loginBtnNavHeaderClick(v: View) {
         if (AuthService.isLoggedIn) {
             UserDataService.logout()
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(BROADCAST_USER_CHANGE_INTENT))
+            val userChangedIntent = Intent(BROADCAST_USER_CHANGE_INTENT)
+            LocalBroadcastManager.getInstance(this).sendBroadcast(userChangedIntent)
         } else {
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivity(loginIntent)

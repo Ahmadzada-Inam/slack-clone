@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import com.example.ahmadzada.slackclone.R
 import com.example.ahmadzada.slackclone.Services.AuthService
-import com.example.ahmadzada.slackclone.Services.UserDataService
 import com.example.ahmadzada.slackclone.Utilities.BROADCAST_USER_CHANGE_INTENT
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
@@ -65,11 +64,11 @@ class CreateUserActivity : AppCompatActivity() {
         this.enableSpinner(true)
 
         if (userName.isNotEmpty() && userEmail.isNotEmpty() && password.isNotEmpty()) {
-            AuthService.registerUser(this, userEmail, password) { registerSuccess ->
+            AuthService.registerUser(userEmail, password) { registerSuccess ->
                 if (registerSuccess) {
-                    AuthService.loginUser(this, userEmail, password) { loginSuccess ->
+                    AuthService.loginUser(userEmail, password) { loginSuccess ->
                         if (loginSuccess) {
-                            AuthService.createUser(this, userName, userEmail, this.userAvatar, this.avatarColor) { createSuccess ->
+                            AuthService.createUser(userName, userEmail, this.userAvatar, this.avatarColor) { createSuccess ->
                                 if (createSuccess) {
                                     val userChangedIntent = Intent(BROADCAST_USER_CHANGE_INTENT)
                                     LocalBroadcastManager.getInstance(this).sendBroadcast(userChangedIntent)

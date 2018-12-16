@@ -11,7 +11,6 @@ import android.widget.Toast
 import com.example.ahmadzada.slackclone.R
 import com.example.ahmadzada.slackclone.Services.AuthService
 import com.example.ahmadzada.slackclone.Utilities.BROADCAST_USER_CHANGE_INTENT
-import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -30,9 +29,9 @@ class LoginActivity : AppCompatActivity() {
 
         this.hideKeyboard()
         if (userEmail.isNotEmpty() && userPassword.isNotEmpty()) {
-            AuthService.loginUser(this, userEmail, userPassword) { loginSuccess ->
+            AuthService.loginUser(userEmail, userPassword) { loginSuccess ->
                 if (loginSuccess) {
-                    AuthService.findUserByEmail(this) { findUserSuccess ->
+                    AuthService.findUserByEmail { findUserSuccess ->
                         if (findUserSuccess) {
                             val userChangedIntent = Intent(BROADCAST_USER_CHANGE_INTENT)
                             LocalBroadcastManager.getInstance(this).sendBroadcast(userChangedIntent)

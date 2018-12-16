@@ -14,25 +14,34 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import com.example.ahmadzada.slackclone.Models.Channel
 import com.example.ahmadzada.slackclone.R
 import com.example.ahmadzada.slackclone.Services.AuthService
+import com.example.ahmadzada.slackclone.Services.MessageService
 import com.example.ahmadzada.slackclone.Services.UserDataService
 import com.example.ahmadzada.slackclone.Utilities.BROADCAST_USER_CHANGE_INTENT
 import com.example.ahmadzada.slackclone.Utilities.SOCKET_URL
 import io.socket.client.IO
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
 
     val socket = IO.socket(SOCKET_URL)
+    lateinit var channelsAdapter: ArrayAdapter<Channel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        this.socket.connect()
+        this.socket.on("channelCreated", this.newChannelListener)
 
         val toggle = object : ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -46,11 +55,12 @@ class MainActivity : AppCompatActivity() {
 
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
+        this.setupAdapter()
     }
 
     override fun onResume() {
         LocalBroadcastManager.getInstance(this).registerReceiver(this.userDataChangeReceiver, IntentFilter(BROADCAST_USER_CHANGE_INTENT))
-        this.socket.connect()
         super.onResume()
     }
 
@@ -69,12 +79,35 @@ class MainActivity : AppCompatActivity() {
                 this@MainActivity.userImageNavHeader.setImageResource(resourceId)
                 this@MainActivity.userImageNavHeader.setBackgroundColor(UserDataService.parsedAvatarColor())
                 this@MainActivity.loginBtnNavHeader.text = "Logout"
+
+                MessageService.findAllChannels(this@MainActivity) { completed ->
+                    if (completed) {
+                        this@MainActivity.channelsAdapter.notifyDataSetChanged()
+                    }
+                }
             } else {
                 this@MainActivity.userImageNavHeader.setImageResource(R.drawable.profiledefault)
                 this@MainActivity.userImageNavHeader.setBackgroundColor(Color.TRANSPARENT)
                 this@MainActivity.loginBtnNavHeader.text = "Login"
             }
         }
+    }
+    
+    private val newChannelListener = Emitter.Listener { args ->
+        runOnUiThread {
+            val channelName = args[0] as String
+            val channelDescription = args[1] as String
+            val channelId = args[2] as String
+
+            val newChannel = Channel(channelId, channelName, channelDescription)
+            MessageService.append(newChannel)
+            this@MainActivity.channelsAdapter.notifyDataSetChanged()
+        }
+    }
+
+    fun setupAdapter() {
+        this.channelsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
+        this.channels_list.adapter = this.channelsAdapter
     }
 
     override fun onBackPressed() {

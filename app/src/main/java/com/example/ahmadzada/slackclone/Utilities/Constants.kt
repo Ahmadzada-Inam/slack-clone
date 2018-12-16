@@ -7,5 +7,6 @@ const val REGISTER_URL = "${BASE_URL}account/register/"
 const val LOGIN_URL = "${BASE_URL}account/login"
 const val CREATE_URL = "${BASE_URL}user/add"
 const val FIND_USER_URL = "${BASE_URL}user/byEmail/"
+const val GET_CHANNELS_URL = "${BASE_URL}channel/"
 
 const val BROADCAST_USER_CHANGE_INTENT = "BROADCAST_USER_CHANGE_INTENT"
